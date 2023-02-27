@@ -1,21 +1,29 @@
-import React, {useCallback, useContext, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useState} from 'react';
 import StuContext from "../store/StuContext";
 import useFetch from "../hooks/useFetch";
+import {useGetStudentByIdQuery} from "../store/studentApi";
 
 const StudentForm = (props) => {
+    const {data:stuData,isSuccess}=useGetStudentByIdQuery(props.stuId)
 
     const [inputData,setInputData]=useState({
-        name:props.stu?props.stu.attributes.name:'',
-        age:props.stu?props.stu.attributes.age:'',
-        gender:props.stu?props.stu.attributes.gender:'男',
-        address:props.stu?props.stu.attributes.address:''
+        name:'',
+        age:'',
+        gender:'男',
+        address:''
     });
-    const ctx=useContext(StuContext);
 
-    const {loading,error,fetchData:updateStudent}=useFetch({
-        url:props.stu?`students/${props.stu.id}`:"students",
-        method:props.stu?'put':'post',
-    },ctx.fetchData);
+    useEffect(()=>{
+        if(isSuccess){
+            setInputData(stuData.attributes)
+        }
+    },[isSuccess])
+    // const ctx=useContext(StuContext);
+
+    // const {loading,error,fetchData:updateStudent}=useFetch({
+    //     url:props.stu?`students/${props.stu.id}`:"students",
+    //     method:props.stu?'put':'post',
+    // },ctx.fetchData);
 
     const nameChangeHandler=(e)=>{
         setInputData(prevState => ({...prevState,name:e.target.value}));
@@ -30,10 +38,10 @@ const StudentForm = (props) => {
         setInputData(prevState => ({...prevState,address:e.target.value}));
     }
     const submitHandler=()=>{
-        updateStudent(inputData);
+        // updateStudent(inputData);
     }
     const updateHandler=()=>{
-        updateStudent(inputData);
+        // updateStudent(inputData);
 
     }
     return (
@@ -50,17 +58,17 @@ const StudentForm = (props) => {
                 <td><input onChange={addressChangeHandler}  value={inputData.address} type="text"/></td>
 
                 <td>
-                    {props.stu&& <>
+                    {props.stuId&& <>
                     <button onClick={()=>props.onCancel()}>取消</button>
                     <button onClick={updateHandler}>确认</button>
                 </>
                 }
-                    {!props.stu&&<button onClick={submitHandler}>添加</button>} </td>
+                    {!props.stuId&&<button onClick={submitHandler}>添加</button>} </td>
             </tr>
 
 
-            {loading&&<tr><td colSpan={5}>添加中...</td></tr>}
-            {error&&<tr><td colSpan={5}>添加失败...</td></tr>}
+            {/*{loading&&<tr><td colSpan={5}>添加中...</td></tr>}*/}
+            {/*{error&&<tr><td colSpan={5}>添加失败...</td></tr>}*/}
         </>
 
     );

@@ -8,10 +8,10 @@ const Student = (props) => {
 
     const [isEdit,setIsEdit]=useState(false);
 
-    const ctx=useContext(StuContext)
-    const {loading,error,fetchData:delStu}=useFetch({url:`students/${props.stu.id}`,method:'delete'},ctx.fetchData)
+    // const ctx=useContext(StuContext)
+    // const {loading,error,fetchData:delStu}=useFetch({url:`students/${props.stu.id}`,method:'delete'},ctx.fetchData)
     const deleteHandler=()=>{
-        delStu();
+        // delStu();
     }
     const cancelEdit=()=>{
         setIsEdit(false)
@@ -28,10 +28,10 @@ const Student = (props) => {
                     <button onClick={()=>{setIsEdit(true)}} >修改</button>
                 </td>
             </tr>}
-            {isEdit&&<StudentForm stu={props.stu} onCancel={cancelEdit}/>}
+            {isEdit&&<StudentForm stuId={props.stu.id} onCancel={cancelEdit}/>}
 
-            {loading&&<tr><td colSpan={5}>正在删除数据...</td></tr>}
-            {error&&<tr><td colSpan={5}>删除失败...</td></tr>}
+            {/*{loading&&<tr><td colSpan={5}>正在删除数据...</td></tr>}*/}
+            {/*{error&&<tr><td colSpan={5}>删除失败...</td></tr>}*/}
 
         </>
 
