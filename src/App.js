@@ -38,7 +38,19 @@ const App = () => {
     refetch:f() //一个函数，用来重新加载数据
     status:"pending" //字符串，请求的状态
      */
-    const {data:stus,isSuccess,isLoading,refetch }=useGetStudentsQuery();
+    const {data:stus,isSuccess,isLoading,refetch }=useGetStudentsQuery(null,{
+        // selectFromResult:result=>{
+        //     if(result.data){
+        //          result.data=result.data.filter(item=>item.attributes.age<24)
+        //     }
+        //     return result;
+        // }
+        pollingInterval:0 ,//轮询间隔，单位毫秒 如果为0 则表示不轮询
+        skip:false,
+        refetchOnMountOrArgChange:false, //设置是否每次都重新加载数据
+        refetchOnFocus:false, //是否在重新获取焦点时重新加载数据
+        refetchOnReconnect:true  //是否在重新连接后重新加载
+    });
     return (
         <div>
             <button onClick={()=>refetch()}>refresh</button>

@@ -3,14 +3,18 @@ import classes from './Student.module.css'
 import StuContext from "../store/StuContext";
 import StudentForm from "./StudentForm";
 import useFetch from "../hooks/useFetch";
+import {useDelStudentMutation} from "../store/studentApi";
 
 const Student = (props) => {
 
     const [isEdit,setIsEdit]=useState(false);
 
+    const [delStudent, {isSuccess}]=useDelStudentMutation();
+
     // const ctx=useContext(StuContext)
     // const {loading,error,fetchData:delStu}=useFetch({url:`students/${props.stu.id}`,method:'delete'},ctx.fetchData)
     const deleteHandler=()=>{
+        delStudent(props.stu.id);
         // delStu();
     }
     const cancelEdit=()=>{
@@ -18,7 +22,8 @@ const Student = (props) => {
     }
     return (
         <>
-            {!isEdit&&            <tr >
+            {(!isEdit&&!isSuccess)&&
+            <tr >
                 <td >{props.stu.attributes.name}</td>
                 <td>{props.stu.attributes.gender}</td>
                 <td>{props.stu.attributes.age}</td>
@@ -28,6 +33,13 @@ const Student = (props) => {
                     <button onClick={()=>{setIsEdit(true)}} >修改</button>
                 </td>
             </tr>}
+
+            {
+                isSuccess&&<tr>
+                    <td colSpan="5">删除已删除  ！</td>
+
+                </tr>
+            }
             {isEdit&&<StudentForm stuId={props.stu.id} onCancel={cancelEdit}/>}
 
             {/*{loading&&<tr><td colSpan={5}>正在删除数据...</td></tr>}*/}

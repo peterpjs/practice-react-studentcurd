@@ -20,7 +20,7 @@ const StudentList = (props) => {
             {props.stus.map(stu=><Student key={stu.id} stu={stu}  />)}
             </tbody>
             <tfoot>
-                {/*<StudentForm/>*/}
+                <StudentForm/>
             </tfoot>
         </table>
     );

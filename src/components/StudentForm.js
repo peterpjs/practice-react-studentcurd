@@ -1,10 +1,12 @@
 import React, {useCallback, useContext, useEffect, useState} from 'react';
 import StuContext from "../store/StuContext";
 import useFetch from "../hooks/useFetch";
-import {useGetStudentByIdQuery} from "../store/studentApi";
-
+import {useAddStudentMutation, useGetStudentByIdQuery, useUpdateStudentMutation} from "../store/studentApi";
 const StudentForm = (props) => {
-    const {data:stuData,isSuccess}=useGetStudentByIdQuery(props.stuId)
+    const {data:stuData,isSuccess,isFetching}=useGetStudentByIdQuery(props.stuId,{
+        skip:!props.stuId,
+        refetchOnMountOrArgChange:false//设置是否每次都重新加载数据 false正常使用缓存，true每次都重载数据 数字，数据缓存的时间
+    });
 
     const [inputData,setInputData]=useState({
         name:'',
@@ -12,6 +14,10 @@ const StudentForm = (props) => {
         gender:'男',
         address:''
     });
+
+    const [addStudent,{isSuccess:isAddSuccess}]=useAddStudentMutation();
+    const [updateStudent,{isSuccess:isUpdateSuccess}]=useUpdateStudentMutation();
+
 
     useEffect(()=>{
         if(isSuccess){
@@ -38,11 +44,23 @@ const StudentForm = (props) => {
         setInputData(prevState => ({...prevState,address:e.target.value}));
     }
     const submitHandler=()=>{
+        addStudent(inputData);
         // updateStudent(inputData);
+        setInputData({
+            name:'',
+            age:'',
+            gender:'男',
+            address:''
+        })
     }
     const updateHandler=()=>{
+        //
+        updateStudent({
+            id:props.stuId,
+            attributes:inputData
+        });
         // updateStudent(inputData);
-
+        props.onCancel();
     }
     return (
         <>
